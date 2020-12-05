@@ -1,0 +1,54 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:13
+    ports:
+        - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=avito_parser_db
+  web:
+    build: .
+    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    volumes:
+      - .:/code
+    ports:
+        - "8000:8000"
+    depends_on:
+      - db
+
+  pgadmin:
+    container_name: Pgadmin
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+        - "5050:80"
+    depends_on:
+      - db
+
+#services:
+#  selenium-hub:
+#    restart: always
+#    image: selenium/hub:3.14.0
+#    container_name: selenium-hub
+#    ports:
+#      - "4444:4444"
+#
+# chrome:
+#    restart: always
+#    image: selenium/node-chrome-debug:3.14.0
+#    ports:
+#      - "5900-5999:5900"
+#    depends_on:
+#      - selenium-hub
+#    environment:
+#      HUB_HOST: selenium-hub
+#      HUB_PORT_4444_TCP_ADDR: selenium-hub
+#      HUB_PORT_4444_TCP_PORT: 4444
+#      DBUS_SESSION_BUS_ADDRESS: "/dev/null"
+#    links:
+#      - selenium-hub:hub
