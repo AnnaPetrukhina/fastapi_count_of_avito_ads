@@ -9,3 +9,11 @@ class Params(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class Counter(BaseModel):
+    timestamp: str = Field(..., title="Timestamp", description="Counter timestamp", max_length=50)
+    count: int = Field(..., title="Counts", description="Count of ads")
+
+    class Config:
+        orm_mode = True

@@ -20,3 +20,12 @@ search_params = sqlalchemy.Table(
     sqlalchemy.Column("query", sqlalchemy.String),
 )
 
+
+counter = sqlalchemy.Table(
+    "Counter",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, index=True),
+    sqlalchemy.Column("id_search", sqlalchemy.Integer, sqlalchemy.ForeignKey("Params.id")),
+    sqlalchemy.Column("timestamp", sqlalchemy.String),
+    sqlalchemy.Column("count", sqlalchemy.Integer),
+)
