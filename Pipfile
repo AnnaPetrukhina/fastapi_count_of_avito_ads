@@ -13,6 +13,9 @@ uvicorn = "*"
 python-dotenv = "*"
 databases = {extras = ["postgresql"], version = "*"}
 asyncpg = "*"
+selenium = "*"
+bs4 = "*"
+lxml = "*"
 
 [dev-packages]
 

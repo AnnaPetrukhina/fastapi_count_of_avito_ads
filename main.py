@@ -1,7 +1,9 @@
 import uvicorn
+import db_manager
 from fastapi import FastAPI, HTTPException
 from schema import Params as SchemaParams
-import db_manager
+from schema import Counter as SchemaCounter
+from parser import avito_parser
 from models import db
 
 
@@ -40,6 +42,13 @@ async def get_params(id_search: int):
     if not params_search:
         raise HTTPException(status_code=404, detail="id not found")
     return SchemaParams(**params_search).dict()
+
+
+@app.post("/parse", response_model=SchemaCounter)
+def get_count_ads(params_search: SchemaParams):
+    parser = avito_parser.AvitoParser(search_region=params_search.region, search=params_search.query)
+    count = parser.parse_all()
+    return SchemaCounter(**count).dict()
 
 
 if __name__ == "__main__":
