@@ -39,7 +39,12 @@ DICTIONARY = {
 }
 
 
-def check_word(word):
+def check_word(word: str) -> str:
+    """Проверка на то, что в слове только буквы и сивол "-" или пробельные символы.
+
+    :param word: слово, которое проверяем
+    :return word: исходное слово, если проверка прошла и слово "россия", если проверка не прошла
+    """
     word = word.strip().lower()
     re_city = r"\b[а-яА-ЯёЁ]+[-\s]?[а-яА-ЯёЁ]*[-\s]?[а-яА-ЯёЁ]*\b"
     if re.fullmatch(re_city, word):
@@ -48,7 +53,12 @@ def check_word(word):
         return "россия"
 
 
-def transliteration(word):
+def transliteration(word: str) -> str:
+    """Перевод слова на транслит.
+
+    :param word: слово, которое переводим
+    :return word: слово на транслите
+    """
     word = check_word(word)
     translit_word = ""
     for symbol in word:
