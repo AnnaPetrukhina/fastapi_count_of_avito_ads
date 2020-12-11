@@ -39,7 +39,7 @@ class AvitoParser:
         wrong = text.find('div', class_='b-404')
         if wrong:
             log.info(f"{wrong.contents[1].contents[0]}")
-            return False
+            raise ValueError("Такой страницы нет")
         return True
 
     def get_number_of_ads(self,  page: int = None):

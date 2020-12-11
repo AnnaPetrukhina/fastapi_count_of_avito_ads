@@ -26,6 +26,6 @@ counter = sqlalchemy.Table(
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, index=True),
     sqlalchemy.Column("id_search", sqlalchemy.Integer, sqlalchemy.ForeignKey("Params.id")),
-    sqlalchemy.Column("timestamp", sqlalchemy.String),
+    sqlalchemy.Column("timestamp", sqlalchemy.DateTime),
     sqlalchemy.Column("count", sqlalchemy.Integer),
 )

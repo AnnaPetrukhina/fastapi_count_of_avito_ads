@@ -1,10 +1,13 @@
-import uvicorn
+import asyncio
+from datetime import datetime
+from typing import List
+
 import db_manager
-from fastapi import FastAPI, HTTPException
-from schema import Params as SchemaParams
-from schema import Counter as SchemaCounter
-from parser import avito_parser
+import uvicorn
+from fastapi import FastAPI
+
 from models import db
+from schema import Params as SchemaParams, Counter as SchemaCounter, ParamsOut as SchemaParamsOut
 
 
 app = FastAPI(title="Async FastAPI")
@@ -20,35 +23,22 @@ async def shutdown():
     await db.disconnect()
 
 
-@app.post("/add")
+@app.post("/add", response_model=SchemaParamsOut)
 async def create_params(params_search: SchemaParams):
-    check = await db_manager.check_params(params_search)
-    if check:
-        return {"search_id": check["id"]}
-    else:
-        id_search = await db_manager.create_params(params_search)
-        return {"search_id": id_search}
+    id_search = await db_manager.create_params(params_search)
+    return id_search
 
 
-@app.post("/check")
-async def check_params(params_search: SchemaParams):
-    check = await db_manager.check_params(params_search)
-    return {"check": check}
-
-
-@app.get("/{id}", response_model=SchemaParams)
-async def get_params(id_search: int):
-    params_search = await db_manager.get_params(id_search)
-    if not params_search:
-        raise HTTPException(status_code=404, detail="id not found")
-    return SchemaParams(**params_search).dict()
-
-
-@app.post("/parse", response_model=SchemaCounter)
-def get_count_ads(params_search: SchemaParams):
-    parser = avito_parser.AvitoParser(search_region=params_search.region, search=params_search.query)
-    count = parser.parse_all()
-    return SchemaCounter(**count).dict()
+@app.get("/stat", response_model=List[SchemaCounter])
+async def get_count(id_search: int, hours: int):
+    start = datetime.now().strftime("%H:%M %d.%m.%Y")
+    while hours > 0:
+        await db_manager.parser(id_search)
+        await asyncio.sleep(60 * 60)
+        hours -= 1
+    end = datetime.now().strftime("%H:%M %d.%m.%Y")
+    counter = await db_manager.get_counter(id_search, start, end)
+    return counter
 
 
 if __name__ == "__main__":

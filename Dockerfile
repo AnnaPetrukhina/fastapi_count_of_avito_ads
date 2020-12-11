@@ -12,10 +12,6 @@ RUN pip install pipenv
 COPY Pipfile Pipfile.lock /code/
 RUN pipenv install --system --dev
 
-# migrations db
-#RUN web alembic revision --autogenerate
-#RUN web alembic upgrade head
-
 #setting timezone
 ENV TZ=Europe/Moscow
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
