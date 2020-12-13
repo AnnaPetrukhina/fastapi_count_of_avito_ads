@@ -44,21 +44,21 @@ async def create_params(params_search: SchemaParams) -> dict:
     :return id_search: id, которое было присвоено поисковой фразе и региону
     """
     id_search = await db_manager.create_params(params_search)
-    log.debug(f"Метода add {id_search}")
+    log.debug(f"Метод add {id_search}")
     return id_search
 
 
 @app.get("/stat", response_model=List[SchemaCounter])
 async def get_count(id_search: int, hours: int) -> list:
-    """Получение количества объявлений по поисковой фразе в соответствующем регионе и временной метке этого счетчика.
+    """Получение временной метки и количества объявлений по id поисковой фразы и соответствующеего региона.
 
     :param id_search: id, которое соответствует поисковой фразе и региону
     :param hours: период (кол-во часов), за который надо вывести счетчики
     :return counter: список всех счетчиков и временных меток за данный период
     """
-    log.debug(f"Метода stat для id:{id_search}, периодом:{hours}")
+    log.debug(f"Метод stat для id:{id_search} c периодом:{hours}")
     start = datetime.now().strftime("%H:%M %d.%m.%Y")
-    while hours > 0:
+    while hours >= 0:
         await db_manager.parser(id_search)
         await asyncio.sleep(60 * 60)
         hours -= 1

@@ -2,7 +2,7 @@ from fastapi import HTTPException
 
 from models import db, search_params, counter
 from schema import Params as SchemaParams
-from parser import avito_parser
+from parser_avito import avito_parser
 
 
 async def get_params(id_search: int) -> dict:
@@ -42,7 +42,8 @@ async def add_counter(params: dict) -> None:
     :param params: id региона с поисковой фразой, кол-во объявлений и временная метка
     :return None
     """
-    await counter.insert().values(params)
+    query = counter.insert().values(params)
+    await db.execute(query)
 
 
 async def get_counter(id_search: int, start: str, end: str) -> list:

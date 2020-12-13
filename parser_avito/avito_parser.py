@@ -5,7 +5,7 @@ from typing import Optional
 from selenium.webdriver import Chrome, ChromeOptions
 import bs4
 
-from parser.translit import transliteration
+from parser_avito.translit import transliteration
 
 
 log = logging.getLogger('parser_avito')

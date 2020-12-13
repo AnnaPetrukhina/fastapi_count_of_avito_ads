@@ -16,6 +16,10 @@ asyncpg = "*"
 selenium = "*"
 bs4 = "*"
 lxml = "*"
+pytest = "*"
+coverage = "*"
+httpx = "*"
+pytest-asyncio = "*"
 
 [dev-packages]
 
